@@ -84,6 +84,10 @@ $router->add('/admin/payments/delete', 'AdminController', 'deletePayment');
 // 5. Manajemen Diskusi
 $router->add('/admin/discussions', 'AdminController', 'discussions');
 $router->add('/admin/reply', 'AdminController', 'replyChat'); // <--- RUTE BARU INI
+// ...
+$router->add('/discussion/send', 'DiscussionController', 'send');
+$router->add('/discussion/delete', 'DiscussionController', 'delete'); // <-- RUTE BARU
+// ...
 
 // === JALANKAN ROUTER ===
 $router->dispatch($_SERVER['REQUEST_URI']);
