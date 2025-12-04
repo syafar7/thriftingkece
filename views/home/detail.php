@@ -1,18 +1,22 @@
 <?php include ROOT_PATH . '/views/layouts/header.php'; ?>
 
 <?php 
-    // Cek apakah yang membuka halaman ini adalah Admin
+    // Cek Role
     $isAdmin = (isset($_SESSION['role']) && $_SESSION['role'] == 'admin'); 
 ?>
 
 <?php if($isAdmin): ?>
     <div class="flex h-screen pt-16 bg-gray-50 overflow-hidden">
         <?php include ROOT_PATH . '/views/layouts/admin_sidebar.php'; ?>
+        
         <div class="flex-1 flex flex-col lg:ml-64 h-full relative w-full overflow-y-auto custom-scroll">
             <main class="flex-1 p-8 fade-in pb-24">
-                <a href="/admin/discussions" class="text-gray-500 font-bold hover:text-indigo-600 mb-4 inline-flex items-center gap-2">
-                    <i class="fas fa-arrow-left"></i> Kembali ke Diskusi
-                </a>
+                <div class="mb-6">
+                    <a href="/admin/discussions" class="text-gray-500 hover:text-indigo-600 font-bold flex items-center gap-2 w-fit px-4 py-2 rounded-lg hover:bg-gray-100 transition">
+                        <i class="fas fa-arrow-left"></i> Kembali ke Daftar Diskusi
+                    </a>
+                </div>
+
 <?php else: ?>
     <div class="container mx-auto px-6 py-10 fade-in">
         <div class="text-sm text-gray-500 mb-6">
@@ -23,8 +27,9 @@
     <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden mb-10">
         <div class="md:flex">
             
-            <div class="md:w-1/2 bg-gray-100 relative h-[500px] img-zoom-container">
-                <img src="<?= $product['image'] ?>" alt="<?= $product['name'] ?>" class="img-contain p-4">
+            <div class="md:w-1/2 bg-gray-100 relative h-[500px] img-zoom-container flex items-center justify-center">
+                <img src="<?= $product['image'] ?>" alt="<?= $product['name'] ?>" class="max-w-full max-h-full object-contain p-4">
+                
                 <?php if($product['discount_price'] > 0): ?>
                     <div class="absolute top-4 left-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg animate-pulse">
                         <p class="text-xs font-bold uppercase">Promo</p>
@@ -56,6 +61,7 @@
                 </div>
 
                 <div class="mb-6 border-b pb-6">
+                    <?php $finalPrice = ($product['discount_price'] > 0) ? $product['discount_price'] : $product['price']; ?>
                     <?php if($product['discount_price'] > 0): ?>
                         <div class="flex items-end gap-3">
                             <span class="text-gray-400 line-through text-xl">Rp <?= number_format($product['price']) ?></span>
@@ -82,8 +88,8 @@
                         </div>
                     <?php else: ?>
                         <div class="bg-indigo-50 p-3 rounded border border-indigo-100">
-                            <span class="text-xs font-bold text-indigo-800 uppercase">Stok Ukuran:</span>
-                            <p class="font-mono text-indigo-600"><?= $product['size'] ?></p>
+                            <span class="text-xs font-bold text-indigo-800 uppercase">Varian Ukuran:</span>
+                            <p class="font-mono text-indigo-600 font-bold"><?= $product['size'] ?></p>
                         </div>
                     <?php endif; ?>
 
@@ -91,27 +97,38 @@
                         <span class="font-bold text-gray-700 block mb-1">Deskripsi:</span>
                         <p class="text-gray-600 leading-relaxed"><?= $product['description'] ?></p>
                     </div>
+                    <div>
+                        <span class="font-bold text-gray-700">Stok:</span>
+                        <span class="<?= $product['stock']>0?'text-green-600':'text-red-600' ?> font-bold"><?= $product['stock'] ?> pcs</span>
+                    </div>
                 </div>
 
                 <?php if(!$isAdmin): ?>
-                    <?php $finalPrice = ($product['discount_price'] > 0) ? $product['discount_price'] : $product['price']; ?>
                     <?php if($product['stock'] > 0): ?>
                         <div class="grid grid-cols-2 gap-4">
+                            
                             <form action="/cart/add" method="POST" onsubmit="return validateSize()">
                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                 <input type="hidden" name="name" value="<?= $product['name'] ?>">
                                 <input type="hidden" name="price" value="<?= $finalPrice ?>">
                                 <input type="hidden" name="image" value="<?= $product['image'] ?>">
                                 <input type="hidden" name="size" id="form_size_cart">
-                                <button class="w-full py-4 rounded-xl border-2 border-indigo-600 text-indigo-600 font-bold hover:bg-indigo-50 transition flex justify-center items-center gap-2"><i class="fas fa-cart-plus"></i> Keranjang</button>
+                                
+                                <button class="w-full py-4 rounded-xl border-2 border-indigo-600 text-indigo-600 font-bold hover:bg-indigo-50 transition flex justify-center items-center gap-2">
+                                    <i class="fas fa-cart-plus"></i> Keranjang
+                                </button>
                             </form>
+
                             <form action="/cart/buy-now" method="POST" onsubmit="return validateSize()">
                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                 <input type="hidden" name="name" value="<?= $product['name'] ?>">
                                 <input type="hidden" name="price" value="<?= $finalPrice ?>">
                                 <input type="hidden" name="image" value="<?= $product['image'] ?>">
                                 <input type="hidden" name="size" id="form_size_buy">
-                                <button class="w-full py-4 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition shadow-lg flex justify-center items-center gap-2"><i class="fas fa-bolt"></i> Beli Sekarang</button>
+
+                                <button class="w-full py-4 rounded-xl bg-indigo-600 text-white font-bold hover:bg-indigo-700 transition shadow-lg flex justify-center items-center gap-2">
+                                    <i class="fas fa-bolt"></i> Beli Sekarang
+                                </button>
                             </form>
                         </div>
                     <?php else: ?>
@@ -140,7 +157,7 @@
                     <div class="border-b border-gray-100 pb-4 last:border-0">
                         <div class="flex justify-between items-center mb-1">
                             <span class="font-bold text-sm text-gray-800"><?= htmlspecialchars($rev['name']) ?></span>
-                            <span class="text-[10px] text-gray-400"><?= date('d M Y', strtotime($rev['created_at'])) ?></span>
+                            <span class="text-[10px] text-gray-400"><?= date('d/m/Y', strtotime($rev['created_at'])) ?></span>
                         </div>
                         <div class="flex text-yellow-400 text-xs mb-2">
                             <?php for($i=1; $i<=5; $i++) echo ($i <= $rev['rating']) ? '<i class="fas fa-star"></i>' : '<i class="far fa-star text-gray-300"></i>'; ?>
@@ -197,24 +214,39 @@
                 <?php else: ?>
                     <?php foreach($chats as $chat): ?>
                         <?php 
+                            // Cek Identitas
                             $isMe = (isset($_SESSION['user_id']) && $_SESSION['user_id'] == $chat['user_id']);
                             $isMsgAdmin = ($chat['role'] == 'admin');
+                            
+                            // Cek Hak Hapus: Admin boleh hapus semua, User cuma boleh hapus punya sendiri
+                            $canDelete = ($isMe || (isset($_SESSION['role']) && $_SESSION['role'] == 'admin'));
                         ?>
                         <div class="flex flex-col <?= $isMe ? 'items-end' : 'items-start' ?>">
                             <div class="max-w-[85%] px-4 py-3 rounded-2xl shadow-sm relative <?= $isMe ? 'bg-indigo-600 text-white rounded-br-none' : ($isMsgAdmin ? 'bg-red-50 text-red-900 border border-red-100 rounded-bl-none' : 'bg-white text-gray-700 border border-gray-200 rounded-bl-none') ?>">
                                 
-                                <span class="text-[10px] font-bold block mb-1 opacity-80 uppercase tracking-wider flex items-center gap-1">
-                                    <?php if($isMsgAdmin): ?>
-                                        <i class="fas fa-shield-alt"></i> ADMIN
-                                    <?php else: ?>
-                                        <?= htmlspecialchars($chat['name']) ?>
+                                <div class="flex justify-between items-center gap-3 border-b border-black/5 pb-1 mb-1">
+                                    <span class="text-[10px] font-bold opacity-80 uppercase tracking-wider flex items-center gap-1">
+                                        <?php if($isMsgAdmin): ?>
+                                            <i class="fas fa-shield-alt"></i> ADMIN
+                                        <?php else: ?>
+                                            <?= htmlspecialchars($chat['name']) ?>
+                                        <?php endif; ?>
+                                    </span>
+
+                                    <?php if($canDelete): ?>
+                                        <a href="/discussion/delete?id=<?= $chat['id'] ?>&product_id=<?= $product['id'] ?>" 
+                                           class="text-[10px] hover:text-red-400 transition opacity-60 hover:opacity-100" 
+                                           data-confirm="Hapus pesan ini?"
+                                           title="Hapus">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
                                     <?php endif; ?>
-                                </span>
+                                </div>
                                 
                                 <p class="text-sm leading-relaxed"><?= htmlspecialchars($chat['message']) ?></p>
                                 
                                 <span class="text-[9px] block text-right mt-2 opacity-60">
-                                    <?= date('H:i', strtotime($chat['created_at'])) ?>
+                                    <?= date('d/m H:i', strtotime($chat['created_at'])) ?>
                                 </span>
                             </div>
                         </div>
@@ -226,9 +258,7 @@
                 <form action="/discussion/send" method="POST" class="relative">
                     <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                     
-                    <?php if($isAdmin): ?>
-                        <input type="hidden" name="redirect_admin" value="true">
-                    <?php endif; ?>
+                    <?php if($isAdmin): ?><input type="hidden" name="redirect_admin" value="true"><?php endif; ?>
 
                     <input type="text" name="message" required 
                            class="w-full border-2 border-gray-200 pl-4 pr-14 py-3 rounded-xl focus:border-indigo-600 focus:outline-none transition shadow-sm bg-white" 
@@ -248,28 +278,31 @@
     </div>
 
 <?php if($isAdmin): ?>
-        </main>
-        <div class="p-6 text-center text-xs text-gray-400">Admin Panel &copy; 2025</div>
+    </main>
+            <div class="p-6 text-center text-xs text-gray-400">Admin Panel &copy; 2025</div>
+        </div>
     </div>
-</div>
 <?php else: ?>
-</div> <script>
-    const radios = document.querySelectorAll('input[name="selected_size"]');
-    radios.forEach(r => r.addEventListener('change', function() {
-        document.getElementById('form_size_cart').value = this.value;
-        document.getElementById('form_size_buy').value = this.value;
-    }));
-    function validateSize() {
-        if (!document.getElementById('form_size_cart').value) {
-            Swal.fire({icon:'warning',title:'Pilih Ukuran',text:'Harap pilih ukuran produk terlebih dahulu!',confirmButtonColor:'#4f46e5'});
-            return false;
-        } return true;
-    }
-    
-    // Auto Scroll Chat ke Bawah
+    </div> 
+
+    <script>
+        const radios = document.querySelectorAll('input[name="selected_size"]');
+        radios.forEach(r => r.addEventListener('change', function() {
+            document.getElementById('form_size_cart').value = this.value;
+            document.getElementById('form_size_buy').value = this.value;
+        }));
+        function validateSize() {
+            if (!document.getElementById('form_size_cart').value) {
+                Swal.fire({icon:'warning',title:'Pilih Ukuran',text:'Harap pilih varian produk terlebih dahulu!',confirmButtonColor:'#4f46e5'});
+                return false;
+            } return true;
+        }
+    </script>
+<?php endif; ?>
+
+<script>
     var chatBox = document.getElementById("chatContainer");
     if(chatBox) chatBox.scrollTop = chatBox.scrollHeight;
 </script>
 
 <?php include ROOT_PATH . '/views/layouts/footer.php'; ?>
-<?php endif; ?>
