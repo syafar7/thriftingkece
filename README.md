@@ -117,8 +117,8 @@ Buka Command Prompt (CMD) atau Terminal.
 ## Link Deployment / APK / Demo Video
 
 * Demo Video: (isi link YouTube / Drive bila ada)
-* Link Deployment: (isi bila aplikasi di-hosting)
-* Link APK: (jika ada versi mobile)
+* Link Deployment: (https://thriftingkece.rf.gd/)
+* Link project github : https://github.com/syafar7/thriftingkece.git
 
 ## Catatan Tambahan
 
