@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # PENTING: Beritahu Apache bahwa kita ada di folder ini
+    RewriteBase /thriftingapp/
+    
+    # 1. Jika membuka root folder, arahkan ke public/index.php
+    RewriteRule ^$ public/index.php [L]
+
+    # 2. Jangan ubah jika user membuka file asli (gambar/css/js)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # 3. Belokkan semua request lain ke public/index.php
+    RewriteRule ^((?!public/).*)$ public/index.php [L]
+</IfModule>

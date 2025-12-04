@@ -1,0 +1,181 @@
+/* =========================================
+   1. GLOBAL SETTINGS & TYPOGRAPHY
+   ========================================= */
+:root {
+    --primary: #4f46e5; /* Indigo 600 */
+    --primary-dark: #3730a3;
+    --accent: #f43f5e; /* Rose 500 */
+    --dark: #0f172a;
+    --light: #f8fafc;
+}
+
+body {
+    font-family: 'Urbanist', sans-serif;
+    background-color: #f8fafc; /* Slate-50 yang lebih bersih */
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* Judul menggunakan font Outfit agar lebih 'Streetwear' */
+h1, h2, h3, h4, h5, h6, .brand-font {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em; /* Sedikit rapat biar modern */
+}
+
+/* Warna blok saat teks diseleksi (biar unik) */
+::selection {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* =========================================
+   2. CUSTOM SCROLLBAR (MODERN LOOK)
+   ========================================= */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+    border: 2px solid #f8fafc; /* Memberi efek padding */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* =========================================
+   3. COMPONENTS & UTILITIES
+   ========================================= */
+
+/* Efek Kaca (Glassmorphism) yang lebih kuat untuk Navbar */
+.glass-effect {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Kartu Produk yang 'Hidup' */
+.card-hover {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek Bouncy */
+}
+
+.card-hover:hover {
+    transform: translateY(-8px); /* Naik ke atas */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Efek Zoom Gambar saat Hover */
+.img-zoom-container {
+    overflow: hidden;
+}
+
+.img-zoom-container img {
+    transition: transform 0.6s ease;
+}
+
+.card-hover:hover .img-zoom-container img {
+    transform: scale(1.1); /* Zoom in halus */
+}
+
+/* Tombol dengan Efek Tekan (Clicky) */
+button, .btn {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+button:active, .btn:active {
+    transform: scale(0.95); /* Mengecil saat diklik */
+}
+
+/* Animasi Fade In Halaman */
+.fade-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   4. FORM ELEMENTS (MODERN INPUTS)
+   ========================================= */
+input[type="text"], 
+input[type="email"], 
+input[type="password"], 
+input[type="number"], 
+select, 
+textarea {
+    transition: all 0.3s ease;
+    border: 2px solid #e2e8f0; /* Border abu muda */
+    background-color: #fff;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); /* Glow Indigo */
+    outline: none;
+}
+
+/* Custom Checkbox untuk Ukuran */
+input[type="radio"]:checked + span {
+    background-color: #eef2ff; /* Indigo 50 */
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.1);
+    font-weight: 800;
+}
+
+/* =========================================
+   5. DECORATIONS
+   ========================================= */
+/* Garis bawah animasi pada Link */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Badge Promo Berdenyut */
+.badge-pulse {
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(244, 63, 94, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(244, 63, 94, 0);
+    }
+}
